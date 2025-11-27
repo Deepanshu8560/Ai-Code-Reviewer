@@ -456,16 +456,239 @@ const Reviews = () => {
   );
 };
 
-const MainLayout = () => {
+const LandingPage = () => {
   const navigate = useNavigate();
 
+  const features = [
+    {
+      icon: <Sparkles className="w-6 h-6" />,
+      title: "AI-Powered Analysis",
+      description: "Advanced AI reviews your code for quality, security, and best practices in seconds."
+    },
+    {
+      icon: <Shield className="w-6 h-6" />,
+      title: "Security Scanning",
+      description: "Automatic detection of vulnerabilities and security issues before they reach production."
+    },
+    {
+      icon: <CheckCircle className="w-6 h-6" />,
+      title: "Accessibility Audits",
+      description: "Ensure your code meets accessibility standards with automated audits and suggestions."
+    },
+    {
+      icon: <TrendingUp className="w-6 h-6" />,
+      title: "Code Quality Metrics",
+      description: "Track code quality scores and improvement trends across all your pull requests."
+    },
+    {
+      icon: <FileCode className="w-6 h-6" />,
+      title: "Smart Suggestions",
+      description: "Get actionable improvement suggestions with line-by-line recommendations."
+    },
+    {
+      icon: <Activity className="w-6 h-6" />,
+      title: "Learning Resources",
+      description: "Personalized learning recommendations to help developers grow their skills."
+    }
+  ];
+
   return (
-    <div className="min-h-screen bg-slate-950" data-testid="main-layout">
+    <div className="min-h-screen bg-slate-950" data-testid="landing-page">
       {/* Header */}
       <header className="glass-header sticky top-0 z-50 border-b border-slate-800/50">
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")} data-testid="header-logo">
+            <div className="flex items-center gap-3">
+              <div className="logo-icon">
+                <Code className="w-6 h-6 text-blue-400" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-white logo-text">CodeGuardian</h1>
+                <p className="text-xs text-slate-400">AI-Powered Code Review</p>
+              </div>
+            </div>
+            <Button
+              onClick={() => navigate("/dashboard")}
+              data-testid="header-get-started"
+              className="btn-primary"
+            >
+              Get Started
+            </Button>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="hero-section relative overflow-hidden" data-testid="hero-section">
+        <div className="hero-gradient" />
+        <div className="container mx-auto px-6 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-8 z-10">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
+                <Sparkles className="w-4 h-4 text-blue-400" />
+                <span className="text-sm text-blue-400 font-medium">Powered by Advanced AI</span>
+              </div>
+              
+              <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <span className="text-white">Elevate Your</span>
+                <br />
+                <span className="text-gradient">Code Quality</span>
+                <br />
+                <span className="text-white">with AI</span>
+              </h1>
+              
+              <p className="text-lg text-slate-300 leading-relaxed max-w-xl">
+                CodeGuardian uses cutting-edge AI to analyze your pull requests, detect security vulnerabilities, 
+                and provide actionable insights to help your team ship better code faster.
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <Button
+                  onClick={() => navigate("/dashboard")}
+                  data-testid="hero-cta-button"
+                  size="lg"
+                  className="btn-primary text-lg px-8 py-6"
+                >
+                  <Code className="w-5 h-5 mr-2" />
+                  Start Reviewing Code
+                </Button>
+                <Button
+                  variant="outline"
+                  onClick={() => document.getElementById('features').scrollIntoView({ behavior: 'smooth' })}
+                  data-testid="learn-more-button"
+                  size="lg"
+                  className="text-lg px-8 py-6 bg-slate-800/50 border-slate-700 text-white hover:bg-slate-800"
+                >
+                  Learn More
+                </Button>
+              </div>
+              
+              <div className="flex items-center gap-8 pt-4">
+                <div>
+                  <p className="text-3xl font-bold text-white">100%</p>
+                  <p className="text-sm text-slate-400">AI Accuracy</p>
+                </div>
+                <div className="w-px h-12 bg-slate-700" />
+                <div>
+                  <p className="text-3xl font-bold text-white">< 10s</p>
+                  <p className="text-sm text-slate-400">Analysis Time</p>
+                </div>
+                <div className="w-px h-12 bg-slate-700" />
+                <div>
+                  <p className="text-3xl font-bold text-white">24/7</p>
+                  <p className="text-sm text-slate-400">Available</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="relative z-10 hidden lg:block">
+              <div className="hero-image-wrapper">
+                <img 
+                  src="https://images.unsplash.com/photo-1546514714-df0ccc50d7bf?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzB8MHwxfHNlYXJjaHwyfHxkZXZlbG9wZXIlMjB3b3Jrc3BhY2V8ZW58MHx8fHwxNzY0MjYyNjYzfDA&ixlib=rb-4.1.0&q=85"
+                  alt="Developer workspace"
+                  className="rounded-2xl shadow-2xl w-full"
+                  data-testid="hero-image"
+                />
+                <div className="hero-overlay" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section id="features" className="py-24 relative" data-testid="features-section">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-white mb-4">
+              Powerful Features for Modern Teams
+            </h2>
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+              Everything you need to maintain high code quality and security standards
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card
+                key={index}
+                className="feature-card glass-card border-slate-700/50 hover:border-blue-500/50"
+                data-testid={`feature-card-${index}`}
+              >
+                <CardContent className="pt-6">
+                  <div className="feature-icon-wrapper mb-4">
+                    <div className="feature-icon bg-blue-500/10 text-blue-400">
+                      {feature.icon}
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-semibold text-white mb-3">{feature.title}</h3>
+                  <p className="text-slate-400 leading-relaxed">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 relative" data-testid="cta-section">
+        <div className="cta-gradient" />
+        <div className="container mx-auto px-6">
+          <Card className="glass-card border-blue-500/20 relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-500/10" />
+            <CardContent className="relative py-16 text-center">
+              <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+                Ready to Transform Your Code Reviews?
+              </h2>
+              <p className="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">
+                Join developers who are already using AI to ship better, more secure code.
+              </p>
+              <Button
+                onClick={() => navigate("/dashboard")}
+                data-testid="cta-dashboard-button"
+                size="lg"
+                className="btn-primary text-lg px-12 py-6"
+              >
+                <GitPullRequest className="w-5 h-5 mr-2" />
+                Go to Dashboard
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-800/50 py-8">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="logo-icon">
+                <Code className="w-5 h-5 text-blue-400" />
+              </div>
+              <span className="text-slate-400">© 2025 CodeGuardian. All rights reserved.</span>
+            </div>
+            <div className="flex items-center gap-6 text-slate-400">
+              <a href="#" className="hover:text-blue-400 transition-colors">Privacy</a>
+              <a href="#" className="hover:text-blue-400 transition-colors">Terms</a>
+              <a href="#" className="hover:text-blue-400 transition-colors">Contact</a>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+const DashboardLayout = () => {
+  const navigate = useNavigate();
+
+  return (
+    <div className="min-h-screen bg-slate-950" data-testid="dashboard-layout">
+      {/* Header */}
+      <header className="glass-header sticky top-0 z-50 border-b border-slate-800/50">
+        <div className="container mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/dashboard")} data-testid="header-logo">
               <div className="logo-icon">
                 <Code className="w-6 h-6 text-blue-400" />
               </div>
@@ -477,7 +700,7 @@ const MainLayout = () => {
             <nav className="flex items-center gap-2">
               <Button
                 variant="ghost"
-                onClick={() => navigate("/")}
+                onClick={() => navigate("/dashboard")}
                 data-testid="nav-dashboard"
                 className="nav-button"
               >
@@ -507,7 +730,7 @@ const MainLayout = () => {
       {/* Main Content */}
       <main className="container mx-auto px-6 py-12">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/submit" element={<SubmitPR />} />
           <Route path="/reviews" element={<Reviews />} />
         </Routes>
