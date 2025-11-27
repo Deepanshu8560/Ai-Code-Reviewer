@@ -44,6 +44,11 @@ class PullRequest(BaseModel):
     status: str = "pending"  # pending, analyzing, completed
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
+class CodeFile(BaseModel):
+    filename: str
+    content: str
+    language: str
+
 class PullRequestCreate(BaseModel):
     title: str
     description: str
@@ -52,6 +57,7 @@ class PullRequestCreate(BaseModel):
     author: str
     repository: str
     branch: str
+    files: Optional[List[CodeFile]] = []
 
 class CodeSuggestion(BaseModel):
     line_number: Optional[int] = None
