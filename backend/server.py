@@ -42,6 +42,7 @@ class PullRequest(BaseModel):
     repository: str
     branch: str
     status: str = "pending"  # pending, analyzing, completed
+    files: Optional[List[Dict[str, str]]] = []
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class CodeFile(BaseModel):
