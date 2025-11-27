@@ -570,7 +570,7 @@ const LandingPage = () => {
                 </div>
                 <div className="w-px h-12 bg-slate-700" />
                 <div>
-                  <p className="text-3xl font-bold text-white">< 10s</p>
+                  <p className="text-3xl font-bold text-white">&lt; 10s</p>
                   <p className="text-sm text-slate-400">Analysis Time</p>
                 </div>
                 <div className="w-px h-12 bg-slate-700" />
