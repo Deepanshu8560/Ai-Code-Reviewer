@@ -253,11 +253,12 @@ async def analyze_pull_request(pr_id: str):
         {"$set": {"status": "analyzing"}}
     )
     
-    # Perform AI analysis
+    # Perform AI analysis (support both single code and multiple files)
     analysis_data = await analyze_code_with_ai(
         code=pr['code'],
         language=pr['language'],
-        description=pr['description']
+        description=pr['description'],
+        files=pr.get('files', [])
     )
     
     # Create analysis record
