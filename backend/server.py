@@ -83,7 +83,7 @@ class CodeAnalysis(BaseModel):
     analyzed_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 # Helper function for AI-powered code analysis
-async def analyze_code_with_ai(code: str, language: str, description: str) -> Dict[str, Any]:
+async def analyze_code_with_ai(code: str, language: str, description: str, files: Optional[List[Dict[str, str]]] = None) -> Dict[str, Any]:
     try:
         chat = LlmChat(
             api_key=EMERGENT_LLM_KEY,
@@ -91,7 +91,39 @@ async def analyze_code_with_ai(code: str, language: str, description: str) -> Di
             system_message="You are an expert code reviewer specialized in security, code quality, accessibility, and best practices."
         ).with_model("openai", "gpt-4o-mini")
 
-        prompt = f"""Analyze the following {language} code and provide a comprehensive review:
+        # Build prompt for multiple files or single code block
+        if files and len(files) > 0:
+            files_content = "\n\n".join([f"File: {f['filename']}\nLanguage: {f['language']}\n```\n{f['content']}\n```" for f in files])
+            prompt = f"""Analyze the following code files from a pull request and provide a comprehensive review:
+
+Description: {description}
+
+Files:
+{files_content}
+
+Provide analysis in the following JSON format:
+{{
+  "overall_score": <0-100>,
+  "code_quality_score": <0-100>,
+  "security_score": <0-100>,
+  "accessibility_score": <0-100>,
+  "suggestions": [
+    {{
+      "line_number": <line or null>,
+      "severity": "info|warning|critical",
+      "category": "code_quality|security|accessibility|performance",
+      "message": "Brief issue description (include filename if relevant)",
+      "suggestion": "How to fix it"
+    }}
+  ],
+  "vulnerabilities": ["List of security vulnerabilities found with filenames"],
+  "test_recommendations": ["List of test suggestions"],
+  "learning_resources": ["Relevant learning topics or resources"]
+}}
+
+Analyze all files together and provide comprehensive feedback. Be thorough and provide actionable feedback."""
+        else:
+            prompt = f"""Analyze the following {language} code and provide a comprehensive review:
 
 Description: {description}
 
