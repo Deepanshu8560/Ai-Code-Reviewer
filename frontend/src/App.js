@@ -526,27 +526,42 @@ const SubmitPR = () => {
               </Tabs>
             </div>
 
-            <Button
-              type="submit"
-              data-testid="submit-pr-button"
-              disabled={loading || analyzing}
-              className="w-full btn-primary"
-              size="lg"
-            >
-              {analyzing ? (
-                <>
-                  <Sparkles className="w-5 h-5 mr-2 animate-spin" />
-                  Analyzing with AI...
-                </>
-              ) : loading ? (
-                "Submitting..."
-              ) : (
-                <>
-                  <FileCode className="w-5 h-5 mr-2" />
-                  Submit for Review
-                </>
+            <div className="pt-4 border-t border-slate-700">
+              {uploadMode === "files" && uploadedFiles.length > 0 && (
+                <div className="mb-4 p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
+                  <div className="flex items-center gap-2 text-blue-400">
+                    <CheckCircle className="w-5 h-5" />
+                    <span className="font-medium">
+                      {uploadedFiles.length} file(s) ready for analysis
+                    </span>
+                  </div>
+                </div>
               )}
-            </Button>
+              
+              <Button
+                type="submit"
+                data-testid="submit-pr-button"
+                disabled={loading || analyzing || (uploadMode === "text" && !formData.code) || (uploadMode === "files" && uploadedFiles.length === 0)}
+                className="w-full btn-primary"
+                size="lg"
+              >
+                {analyzing ? (
+                  <>
+                    <Sparkles className="w-5 h-5 mr-2 animate-spin" />
+                    Analyzing with AI...
+                  </>
+                ) : loading ? (
+                  "Submitting..."
+                ) : (
+                  <>
+                    <FileCode className="w-5 h-5 mr-2" />
+                    {uploadMode === "files" && uploadedFiles.length > 0
+                      ? `Review ${uploadedFiles.length} File(s)`
+                      : "Submit for Review"}
+                  </>
+                )}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>
