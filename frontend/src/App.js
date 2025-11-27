@@ -411,18 +411,119 @@ const SubmitPR = () => {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="code">Code</Label>
-              <Textarea
-                id="code"
-                data-testid="input-code"
-                placeholder="Paste your code here..."
-                value={formData.code}
-                onChange={(e) => setFormData({ ...formData, code: e.target.value })}
-                required
-                rows={15}
-                className="input-field font-mono text-sm"
-              />
+            {/* Upload Mode Tabs */}
+            <div className="space-y-4">
+              <Label>Code Input Method</Label>
+              <Tabs value={uploadMode} onValueChange={setUploadMode} className="w-full">
+                <TabsList className="grid w-full grid-cols-2">
+                  <TabsTrigger value="text" data-testid="tab-text-input">
+                    <FileCode className="w-4 h-4 mr-2" />
+                    Paste Code
+                  </TabsTrigger>
+                  <TabsTrigger value="files" data-testid="tab-file-upload">
+                    <GitPullRequest className="w-4 h-4 mr-2" />
+                    Upload Files
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="text" className="space-y-2 mt-4">
+                  <Label htmlFor="code">Code</Label>
+                  <Textarea
+                    id="code"
+                    data-testid="input-code"
+                    placeholder="Paste your code here..."
+                    value={formData.code}
+                    onChange={(e) => setFormData({ ...formData, code: e.target.value })}
+                    rows={15}
+                    className="input-field font-mono text-sm"
+                  />
+                </TabsContent>
+
+                <TabsContent value="files" className="space-y-4 mt-4">
+                  {/* Drag and Drop Zone */}
+                  <div
+                    onDrop={handleDrop}
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    data-testid="file-drop-zone"
+                    className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
+                      isDragging
+                        ? 'border-blue-500 bg-blue-500/10'
+                        : 'border-slate-700 hover:border-blue-500/50 hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <input
+                      type="file"
+                      id="file-upload"
+                      multiple
+                      onChange={handleFileInputChange}
+                      className="hidden"
+                      data-testid="file-input"
+                    />
+                    <label htmlFor="file-upload" className="cursor-pointer">
+                      <div className="flex flex-col items-center gap-4">
+                        <div className="w-16 h-16 rounded-full bg-blue-500/10 flex items-center justify-center">
+                          <FileCode className="w-8 h-8 text-blue-400" />
+                        </div>
+                        <div>
+                          <p className="text-lg font-semibold text-white mb-2">
+                            Drop your code files here
+                          </p>
+                          <p className="text-sm text-slate-400">
+                            or click to browse files
+                          </p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="mt-2 bg-slate-800 border-slate-700 text-white"
+                          data-testid="browse-files-button"
+                        >
+                          Browse Files
+                        </Button>
+                      </div>
+                    </label>
+                  </div>
+
+                  {/* Uploaded Files List */}
+                  {uploadedFiles.length > 0 && (
+                    <div className="space-y-2">
+                      <Label>Uploaded Files ({uploadedFiles.length})</Label>
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {uploadedFiles.map((file, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 rounded-lg bg-slate-800/50 border border-slate-700"
+                            data-testid={`uploaded-file-${index}`}
+                          >
+                            <div className="flex items-center gap-3 flex-1">
+                              <FileCode className="w-5 h-5 text-blue-400" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-white truncate">
+                                  {file.filename}
+                                </p>
+                                <p className="text-xs text-slate-400">
+                                  {file.language} • {(file.size / 1024).toFixed(2)} KB
+                                </p>
+                              </div>
+                            </div>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => removeFile(index)}
+                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                              data-testid={`remove-file-${index}`}
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </TabsContent>
+              </Tabs>
             </div>
 
             <Button
