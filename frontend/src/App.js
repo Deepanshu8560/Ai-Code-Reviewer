@@ -743,7 +743,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/*" element={<MainLayout />} />
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/*" element={<DashboardLayout />} />
       </Routes>
     </BrowserRouter>
   );
