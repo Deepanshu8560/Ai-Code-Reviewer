@@ -178,6 +178,9 @@ const SubmitPR = () => {
     repository: "",
     branch: ""
   });
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [isDragging, setIsDragging] = useState(false);
+  const [uploadMode, setUploadMode] = useState("text"); // "text" or "files"
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [prId, setPrId] = useState(null);
