@@ -186,13 +186,108 @@ const SubmitPR = () => {
   const [prId, setPrId] = useState(null);
   const navigate = useNavigate();
 
+  const getLanguageFromExtension = (filename) => {
+    const ext = filename.split('.').pop().toLowerCase();
+    const langMap = {
+      'js': 'javascript',
+      'jsx': 'javascript',
+      'ts': 'typescript',
+      'tsx': 'typescript',
+      'py': 'python',
+      'java': 'java',
+      'cs': 'csharp',
+      'go': 'go',
+      'rs': 'rust',
+      'cpp': 'cpp',
+      'c': 'c',
+      'php': 'php',
+      'rb': 'ruby',
+      'swift': 'swift',
+      'kt': 'kotlin'
+    };
+    return langMap[ext] || 'javascript';
+  };
+
+  const handleFileUpload = async (files) => {
+    const fileArray = Array.from(files);
+    const codeFiles = [];
+
+    for (const file of fileArray) {
+      // Filter only code files
+      if (file.type.includes('text') || file.name.match(/\.(js|jsx|ts|tsx|py|java|cs|go|rs|cpp|c|php|rb|swift|kt)$/)) {
+        try {
+          const content = await file.text();
+          const language = getLanguageFromExtension(file.name);
+          codeFiles.push({
+            filename: file.name,
+            content: content,
+            language: language,
+            size: file.size
+          });
+        } catch (error) {
+          console.error(`Error reading file ${file.name}:`, error);
+        }
+      }
+    }
+
+    if (codeFiles.length > 0) {
+      setUploadedFiles(codeFiles);
+      toast.success(`${codeFiles.length} file(s) uploaded successfully!`);
+    } else {
+      toast.error("No valid code files found");
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    
+    const files = e.dataTransfer.files;
+    handleFileUpload(files);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = () => {
+    setIsDragging(false);
+  };
+
+  const handleFileInputChange = (e) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      handleFileUpload(files);
+    }
+  };
+
+  const removeFile = (index) => {
+    setUploadedFiles(files => files.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      // Prepare submission data
+      const submissionData = {
+        ...formData,
+        files: uploadedFiles.map(f => ({
+          filename: f.filename,
+          content: f.content,
+          language: f.language
+        }))
+      };
+
+      // If no code in text area but files uploaded, set a default
+      if (!submissionData.code && uploadedFiles.length > 0) {
+        submissionData.code = `${uploadedFiles.length} file(s) uploaded for review`;
+      }
+
       // Create PR
-      const prRes = await axios.post(`${API}/pull-requests`, formData);
+      const prRes = await axios.post(`${API}/pull-requests`, submissionData);
       const createdPrId = prRes.data.id;
       setPrId(createdPrId);
       
