@@ -1,5 +1,5 @@
 import { generateText } from 'ai';
-import { openai } from '@ai-sdk/openai';
+import { createOpenAI } from '@ai-sdk/openai';
 import type { Issue } from '@/types';
 
 export async function analyzeWithAI(
@@ -11,8 +11,13 @@ export async function analyzeWithAI(
     try {
         const prompt = buildAnalysisPrompt(code, language, filename);
 
+        // Create OpenAI instance with API key
+        const openai = createOpenAI({
+            apiKey: apiKey,
+        });
+
         const { text } = await generateText({
-            model: openai('gpt-4o', { apiKey }),
+            model: openai('gpt-4o'),
             prompt,
             temperature: 0.3,
         });
